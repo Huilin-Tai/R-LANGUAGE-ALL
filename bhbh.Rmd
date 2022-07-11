@@ -1,0 +1,80 @@
+---
+title: "次次次次次"
+output:
+  pdf_document: default
+  html_document: default
+date: '2022-06-17'
+---
+
+```{r }
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(rms)
+library(readr)
+library(survival)
+library(survminer)
+
+library(dplyr)
+
+library(Seurat)
+pbc=read.table("~/Desktop/Microbiome signature-HSZ.txt",head=TRUE)
+dd<-datadist(pbc)
+arrange(pbc,desc(Overall_survival_time))
+pbc$died <- pbc$Event==1
+dd<-datadist(pbc)
+options(datadist="dd")
+options(na.action="na.delete")
+summary(pbc$Overall_survival_time)
+occ<-cph(formula = Surv(Overall_survival_time,died) ~ L5likevirus+Deltabaculovirus+	Sicinivirus	+Aparavirus+	Cytomegalovirus	
+           ,data=pbc,x=T,y=T,surv = T,na.action=na.delete)
+print(occ)
+surv<-Survival(occ) 
+
+
+# Plot the graph. 
+plot(survfit(Surv(pbc$Overall_survival_time,pbc$Event == 0)~1))
+
+
+
+surv3<-function(x) surv(365,x)
+surv4<-function(x) surv(1095,x)
+surv5=function(x) surv(1825,x)
+x<-nomogram(occ,fun = list(surv3,surv4,surv5),lp=T,
+            funlabel = c('1 year survival Probability ','3 year survival Probability','5 year survival probability'),maxscale = 100,
+            fun.at = c(0.95,0.9,0.8,0.7,0.5,0.3,0.1))
+
+plot(x)
+
+```
+
+```{r}
+## Note the MASS package masks select()!
+library(tidyverse)
+## https://github.com/tidyverse/tibble/issues/395
+options(crayon.enabled = FALSE)
+## Used for the dataset.
+library(survival)
+## Used for visualizaiton.
+library(survminer)
+## Load the Ovarian Cancer Survival Data
+data(occ)
+## Turn into a data_frame
+##ovarian <- as_data_frame(occ)
+## Plot
+ovarian=pbc
+library(survivalROC)
+ggsurvplot(survfit(Surv(Overall_survival_time, died) ~ 1,
+                   data = pbc),
+           risk.table = TRUE,
+           break.time.by = 365)
+
+
+
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+

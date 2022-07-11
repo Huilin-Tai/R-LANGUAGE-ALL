@@ -1,0 +1,45 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r}
+data(LifeCycleSavings)
+attach(LifeCycleSavings)
+names(LifeCycleSavings)
+mod1=lm(LifeCycleSavings$pop15~LifeCycleSavings$pop75)
+mod2=lm(LifeCycleSavings$pop15~LifeCycleSavings$dpi)
+mod3=lm(LifeCycleSavings$pop15~LifeCycleSavings$ddpi)
+mod4=lm(LifeCycleSavings$pop75~LifeCycleSavings$dpi)
+mod5=lm(LifeCycleSavings$pop75~LifeCycleSavings$ddpi)
+mod6=lm(LifeCycleSavings$dpi~LifeCycleSavings$ddpi)
+summary(mod1)
+summary(mod2)
+summary(mod3)
+summary(mod4)
+summary(mod5)
+summary(mod6)
+```
+
+
+```{r}
+boxplot(LifeCycleSavings$dpi)
+pop15=LifeCycleSavings$pop15
+pop75=LifeCycleSavings$pop75
+dpi=LifeCycleSavings$dpi
+ddpi=LifeCycleSavings$ddpi
+
+
+Model1 = lm(sr ~ pop15 + pop75 + dpi + ddpi, data = LifeCycleSavings)
+summary(Model1)
+```
+
+
+
+```{r}
+Model2 <- lm(sr~ pop15 * ddpi, data = LifeCycleSavings)
+summary(Model2)
+plot(Model2)
+predict(Model2,se.fit= T,interval=c("confidence"),level=0.99)
+```
+

@@ -1,0 +1,18 @@
+---
+title: "ass3"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+library(tidyverse)
+library(readr)
+data <- read_csv("~/Desktop/204 R/ASWELLS.csv")
+data.model=lm(data$ARSENIC~data$LATITUDE+ data$LONGITUDE+data$`DEPTH-FT`)
+summary(data.model)
+
+```
+
+
+

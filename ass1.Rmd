@@ -1,0 +1,21 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r}
+library(tidyverse)
+library(readr)
+data <- read_csv("~/Desktop/204 R/BBALL.csv")
+data.model=lm(data$Frequency~data$Resonance)
+
+summary(data.model)
+confint(data.model)
+anova(data.model)
+plot(data$Resonance,data$Frequency)
+abline(data.model,xlab="resonance",ylab="frequency")
+
+
+```
+
+

@@ -1,0 +1,39 @@
+---
+title: "as4"
+output: html_document
+---
+```{r}
+library(tidyverse)
+exam_data=dget("exam.txt")
+
+```
+
+
+```{r}
+average_month=apply(exam_data,c(1,3),sum)
+ave_per=apply(average_month,2,sum)
+ave_per/1000
+
+```
+```{r}
+lshh=apply(exam_data,c(1,3),sum)
+a1=sort(lshh[,1],dec=TRUE)[1:5]
+a2=sort(lshh[,2],dec=TRUE)[1:5]
+a3=sort(lshh[,3],dec=TRUE)[1:5]
+a1
+a2
+a3
+```
+
+
+```{r}
+apj=apply(exam_data,c(2,3),mean)
+apj
+library(ggplot2)
+matplot(as.numeric(rownames(apj)),apj,type="b",pch=16,lwd=2,lty=1,xlab="ItemNum",
+ylab="Timepoint",ylim=c(1,5),col=c(1:3),main="average scores for each question for each year")
+legend(x=1,y=5,legend=colnames(apj),lwd=1,col=c(1:3),cex=0.75)
+```
+
+
+

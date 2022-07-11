@@ -1,0 +1,67 @@
+---
+title: "ass3"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+library(tidyverse)
+library(xlsx)
+data <- read.xlsx("~/Desktop/204 R/LEADMOSS.xlsx",sheetIndex = 1)
+
+y=data$LEAD
+x1=data$ELEVATION
+x2=data$SLOPE
+mod1=lm(y~x1*x2)
+summary(mod1)
+```
+
+
+```{r}
+library(psych)
+x2.factor=factor(x2)
+describeBy(y,x2.factor)
+par(mfrow=c(1,2))
+qqnorm(subset(y,x2.factor==0),main="Group 1")
+qqline(subset(y,x2.factor==0))
+qqnorm(subset(y,x2.factor==1),main="Group 2")
+qqline(subset(y,x2.factor==1))
+plot(x=data$ELEVATION[data$SLOPE==1],y=data$LEAD[data$SLOPE==1],xlab="elevation",ylab="lead level",col="red",pch=20)
+lines(x=data$ELEVATION[data$SLOPE==0],y=data$LEAD[data$SLOPE==0],col="blue",pch=20,type='p')
+abline(a=5.0701418,b=0.0007367,col="blue")
+abline(a=4.190465,b=0.0011366,col="red")
+
+legend(2000,30,legend=c("slope face=0","slope face=1"),col=c("blue","red"),lty=c(1,1),bty="n")
+```
+```{r}
+anova(mod1)
+```
+
+
+```{r}
+t=lm(y~y)
+t1=lm(y~x1)
+t2=lm(y~x2)
+t3=lm(y~x1+x2)
+t4=lm(y~x1*x2)
+summary(t)
+summary(t1)
+summary(t2)
+summary(t3)
+summary(t4)
+```
+```{r}
+moda=lm(y~x1*x2)
+modb=update(moda,.~.-x1:x2)
+anova(modb,moda)
+modc=update(moda,.~.-x1)
+anova(modc,modb)
+modd=update(moda,.~.-x2)
+anova(modd,modb)
+mode=update(modd,.~.-x1)
+anova(mode,modd)
+```
+
+
+
